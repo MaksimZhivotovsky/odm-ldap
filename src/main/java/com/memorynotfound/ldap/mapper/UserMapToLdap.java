@@ -18,6 +18,7 @@ public class UserMapToLdap {
                 .eMailAddress(ldapUser.getEmail())
                 .login(ldapUser.getLogin())
                 .keycloakId(convertObjectGUID(ldapUser.getKeycloakId()))
+                .isArchive(false)
                 .build();
     }
 
