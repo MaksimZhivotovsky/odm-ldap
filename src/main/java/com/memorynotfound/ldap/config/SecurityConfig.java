@@ -17,10 +17,7 @@ public class SecurityConfig {
     @Bean
     public LdapContextSource ldapContextSource(){
         LdapContextSource lcs = new LdapContextSource();
-        lcs.setUrl("ldap://10.170.192.9:389");
-        lcs.setBase("CN=Users,DC=1580lab,DC=ru");
-        lcs.setUserDn("CN=Максим Животовский,CN=Users,DC=1580lab,DC=ru");
-        lcs.setPassword("Max123456");
+
 
         return lcs;
     }
