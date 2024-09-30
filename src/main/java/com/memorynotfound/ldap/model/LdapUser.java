@@ -10,12 +10,13 @@ import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
 import javax.naming.Name;
+import java.util.UUID;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entry(objectClasses = {"inetOrgPerson", "organizationalPerson", "top"})
+@Entry(objectClasses = {"top", "person", "organizationalPerson", "user"}) //top;person;organizationalPerson;user
 public final class LdapUser {
 
     @Id
@@ -25,15 +26,19 @@ public final class LdapUser {
     private String fullName;
     @Attribute(name = "sn")
     private String lastName;
-    @Attribute(name = "givenname")
-    private String givenName;
-    @Attribute(name = "mail")
-    private String mail;
+    @Attribute(name = "givenName")
+    private String firsName;
+    @Attribute(name = "userPrincipalName")
+    private String email;
+    @Attribute(name = "sAMAccountName")
+    private String login;
     @Attribute(name = "description")
     private String description;
-    @Attribute(name = "uid")
-    private String uid;
-    @Attribute(name = "userPassword")
+    @Attribute(name = "objectGUID")
+    private String keycloakId;
+
+    @Attribute(name = "nTSecurityDescriptor")
     private String password;
+
 
 }

@@ -6,10 +6,15 @@ import com.memorynotfound.ldap.model.LdapUser;
 import com.memorynotfound.ldap.model.User_DB;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.stereotype.Service;
+
+import javax.naming.directory.DirContext;
 import java.util.List;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
@@ -19,6 +24,20 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 public class LdapUserRepository {
 
     private final LdapTemplate ldapTemplate;
+
+    public LdapUser findByPassword(String mail,String password) {
+//        return ldapTemplate.findOne(query().where("uid").is(uid), LdapUser.class);
+         ldapTemplate.authenticate(query().where("mail").is(mail), password);
+        return ldapTemplate.findOne(query().where("mail").is(mail), LdapUser.class);
+    }
+
+
+//    public void authenticate(final String username, final String password) {
+//        DirContext ldapUser = contextSource.getContext(
+//                "cn=" + username
+//                        + ",ou=users,"
+//                        + env.getRequiredProperty("ldap.partitionSuffix"), password);
+//    }
 
     public String create(LdapUserVO ldapUserVO) {
         LdapUser ldapUser = new LdapUser();
@@ -37,31 +56,40 @@ public class LdapUserRepository {
 //        ldapUser.setEMailAddress(ldapUserVO.getEMailAddress());
 
 //        ldapUser.setDn(LdapNameBuilder.newInstance(ldapUserVO.getDn()).build());
-        ldapUser.setDescription(ldapUserVO.getDescription());
-        ldapUser.setFullName(ldapUserVO.getFullName());
-        ldapUser.setLastName(ldapUserVO.getLastName());
-        ldapUser.setGivenName(ldapUserVO.getGivenName());
-        ldapUser.setMail(ldapUserVO.getMail());
-        ldapUser.setUid(ldapUserVO.getUid());
-
-        ldapUser.setPassword(ldapUserVO.getPassword());
+//        ldapUser.setDescription(ldapUserVO.getDescription());
+//        ldapUser.setFullName(ldapUserVO.getFullName());
+//        ldapUser.setLastName(ldapUserVO.getLastName());
+//        ldapUser.setGivenName(ldapUserVO.getGivenName());
+//        ldapUser.setMail(ldapUserVO.getMail());
+//        ldapUser.setUid(ldapUserVO.getUid());
+//
+//        ldapUser.setPassword(ldapUserVO.getPassword());
 
         ldapTemplate.create(ldapUser);
 
         return "success";
     }
 
-    public LdapUser createLdapUser(User_DB userDb) {
-        log.info("LdapUserRepository createLdapUser userDb {}", userDb);
-        LdapUser ldapUser = UserMapper.mapToLdapUser(userDb);
-
-        ldapTemplate.create(ldapUser);
-
-        return ldapUser;
-    }
+//    public LdapUser createLdapUser(User_DB userDb) {
+//        log.info("LdapUserRepository createLdapUser userDb {}", userDb);
+//        LdapUser ldapUser = UserMapper.mapToLdapUser(userDb);
+//
+//        ldapTemplate.create(ldapUser);
+//
+//        return ldapUser;
+//    }
 
     public LdapUser findByUid(String uid) {
-        return ldapTemplate.findOne(query().where("uid").is(uid), LdapUser.class);
+        return ldapTemplate.findOne(query().where("userPrincipalName").is(uid), LdapUser.class);
+    }
+
+    public LdapUser findByLogin(String login) {
+        try {
+            return ldapTemplate.findOne(query().where("sAMAccountName").is(login), LdapUser.class);
+        } catch (Exception e) {
+            log.error("LdapUserRepository findByLogin e {}", e.getMessage());
+            throw new RuntimeException();
+        }
     }
 
     public void update(User_DB userDb) {
@@ -72,18 +100,18 @@ public class LdapUserRepository {
 
         ldapUser.setDn(LdapNameBuilder.newInstance("cn=Животовский Максим Алексеевич,ou=user-db").build());
 //        ldapUser.setFullName(name);
-        if (userDb.getLastName() != null) {
-            ldapUser.setLastName(userDb.getLastName());
-        }
-        if (userDb.getFirstName() != null) {
-            ldapUser.setGivenName(userDb.getFirstName());
-        }
-        if (userDb.getKeycloakId() != null) {
-            ldapUser.setUid(userDb.getKeycloakId());
-        }
-        if (userDb.getEMailAddress() != null) {
-            ldapUser.setMail(userDb.getEMailAddress());
-        }
+//        if (userDb.getLastName() != null) {
+//            ldapUser.setLastName(userDb.getLastName());
+//        }
+//        if (userDb.getFirstName() != null) {
+//            ldapUser.setGivenName(userDb.getFirstName());
+//        }
+//        if (userDb.getKeycloakId() != null) {
+//            ldapUser.setUid(userDb.getKeycloakId());
+//        }
+//        if (userDb.getEMailAddress() != null) {
+//            ldapUser.setMail(userDb.getEMailAddress());
+//        }
 //        if (userDb.getPassword() != null) {
 //            ldapUser.setPassword(userDb.getPassword());
 //        }
@@ -91,20 +119,20 @@ public class LdapUserRepository {
         ldapTemplate.update(ldapUser);
     }
 
-    public String updateLdap(LdapUserVO ldapUserVO) {
-        LdapUser ldapUser = new LdapUser();
-        ldapUser.setDn(LdapNameBuilder.newInstance(ldapUserVO.getDn()).build());
-        ldapUser.setDescription(ldapUserVO.getDescription());
-        ldapUser.setFullName(ldapUserVO.getFullName());
-        ldapUser.setLastName(ldapUserVO.getLastName());
-        ldapUser.setGivenName(ldapUserVO.getGivenName());
-        ldapUser.setMail(ldapUserVO.getMail());
-        ldapUser.setUid(ldapUserVO.getUid());
-
-        ldapTemplate.update(ldapUser);
-
-        return "success";
-    }
+//    public String updateLdap(LdapUserVO ldapUserVO) {
+//        LdapUser ldapUser = new LdapUser();
+//        ldapUser.setDn(LdapNameBuilder.newInstance(ldapUserVO.getDn()).build());
+//        ldapUser.setDescription(ldapUserVO.getDescription());
+//        ldapUser.setFullName(ldapUserVO.getFullName());
+//        ldapUser.setLastName(ldapUserVO.getLastName());
+//        ldapUser.setGivenName(ldapUserVO.getGivenName());
+//        ldapUser.setMail(ldapUserVO.getMail());
+//        ldapUser.setUid(ldapUserVO.getUid());
+//
+//        ldapTemplate.update(ldapUser);
+//
+//        return "success";
+//    }
 
     public String delete(String uid) {
         LdapUserVO ldapUserVO =

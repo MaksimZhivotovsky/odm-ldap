@@ -24,11 +24,19 @@ public class UserManagerController {
     private final UserManagerServiceImpl service;
 
 
-    @PostMapping(path = "/user")
-    public User_DB createUser(@RequestBody() UserCreateDto valueFront) {
+//    @PostMapping(path = "/user")
+//    public User_DB createUser(@RequestBody() UserCreateDto valueFront) {
+//        log.info("Запрос createUser - Post(Создание пользователя).");
+//
+//        return service.createUser(valueFront);
+//
+//    }
+
+    @PostMapping()
+    public String createUser() {
         log.info("Запрос createUser - Post(Создание пользователя).");
 
-        return service.createUser(valueFront);
+        return service.createUsersForLdap();
 
     }
 
