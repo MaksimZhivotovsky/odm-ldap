@@ -83,6 +83,10 @@ public class LdapUserRepository {
         return ldapTemplate.findOne(query().where("userPrincipalName").is(uid), LdapUser.class);
     }
 
+    public LdapUser findByObjectGUID(String objectGUID) {
+        return ldapTemplate.findOne(query().where("objectGUID").is(objectGUID), LdapUser.class);
+    }
+
     public LdapUser findByLogin(String login) {
         try {
             return ldapTemplate.findOne(query().where("sAMAccountName").is(login), LdapUser.class);

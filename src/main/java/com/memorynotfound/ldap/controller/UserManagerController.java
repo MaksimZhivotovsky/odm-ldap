@@ -1,7 +1,9 @@
 package com.memorynotfound.ldap.controller;
 
 import com.memorynotfound.ldap.dto.UserCreateDto;
+import com.memorynotfound.ldap.model.LdapUser;
 import com.memorynotfound.ldap.model.User_DB;
+import com.memorynotfound.ldap.repo.LdapUserRepository;
 import com.memorynotfound.ldap.service.UserManagerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.List;
 public class UserManagerController {
 
     private final UserManagerServiceImpl service;
+    private final LdapUserRepository ldapUserRepository;
 
 
 //    @PostMapping(path = "/user")
@@ -38,6 +41,11 @@ public class UserManagerController {
 
         return service.createUsersForLdap();
 
+    }
+
+    @GetMapping(value = "/findByUid/{objectGUID}")
+    public LdapUser findByUid(@PathVariable("objectGUID") String objectGUID) {
+        return ldapUserRepository.findByObjectGUID(objectGUID);
     }
 
     @PutMapping(path = "/user")

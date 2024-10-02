@@ -1,9 +1,14 @@
 package com.memorynotfound.ldap.mapper;
 
+import com.fasterxml.jackson.databind.deser.std.FromStringDeserializer;
+import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
 import com.memorynotfound.ldap.model.LdapUser;
 import com.memorynotfound.ldap.model.User_DB;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class UserMapToLdap {
@@ -12,15 +17,27 @@ public class UserMapToLdap {
 
 
     public static User_DB mapToUserDB(LdapUser ldapUser) {
-        return User_DB.builder()
-                .firstName(ldapUser.getFirsName())
-                .lastName(ldapUser.getLastName())
-                .eMailAddress(ldapUser.getEmail())
-                .login(ldapUser.getLogin())
-                .keycloakId(convertObjectGUID(ldapUser.getKeycloakId()))
-                .isArchive(false)
-                .build();
+
+            return User_DB.builder()
+                    .firstName(ldapUser.getFirsName())
+                    .lastName(ldapUser.getLastName())
+                    .eMailAddress(ldapUser.getEmail())
+                    .login(ldapUser.getLogin())
+                    .keycloakId(UUID.nameUUIDFromBytes(ldapUser.getKeycloakId().getBytes()).toString())
+                    .isArchive(false)
+                    .build();
+
+//                    .keycloakId(
+    //                        UUID.nameUUIDFromBytes(ldapUser.getKeycloakId().getBytes(StandardCharsets.UTF_16)).toString()
+//                            UUID.nameUUIDFromBytes(ldapUser.getKeycloakId().getBytes()).toString()
+//                            UUID.nameUUIDFromBytes(ldapUser.getKeycloakId().getBytes()).toString()
+//
+//                    )
+
     }
+
+//SearchResultEntry: member.setObjectGUID(Utiles.bytesToUUID(result.getAttribute(attribute).getValueByteArray()).toString());
+
 
     private static String convertObjectGUID(Object objectGUID) {
         byte[] guid = toByteArray(objectGUID);

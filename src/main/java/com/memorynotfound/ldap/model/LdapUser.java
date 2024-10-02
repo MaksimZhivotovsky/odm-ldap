@@ -36,6 +36,7 @@ public final class LdapUser {
     private String description;
     @Attribute(name = "objectGUID")
     private String keycloakId;
+//    private byte[] guid;
 
     @Attribute(name = "nTSecurityDescriptor")
     private String password;
