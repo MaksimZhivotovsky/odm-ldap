@@ -24,7 +24,9 @@ public class UserMapToLdap {
                     .eMailAddress(ldapUser.getEmail())
                     .login(ldapUser.getLogin())
                     .keycloakId(UUID.nameUUIDFromBytes(ldapUser.getKeycloakId().getBytes()).toString())
+                    .password("123456")
                     .isArchive(false)
+                    .organization(1L)
                     .build();
 
 //                    .keycloakId(
