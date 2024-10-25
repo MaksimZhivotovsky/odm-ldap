@@ -8,6 +8,8 @@ import com.memorynotfound.ldap.model.User_DB;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -26,7 +28,9 @@ public class UserMapToLdap {
                     .keycloakId(UUID.nameUUIDFromBytes(ldapUser.getKeycloakId().getBytes()).toString())
                     .password("123456")
                     .isArchive(false)
-                    .organization(1L)
+//                    .organization(1L)
+                    .dateCreation(new Date())
+                    .status(2L)
                     .build();
 
 //                    .keycloakId(
